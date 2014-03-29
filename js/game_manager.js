@@ -193,10 +193,6 @@ GameManager.prototype.move = function (direction) {
   if (moved) {
     this.addRandomTile();
 
-    if (!this.movesAvailable()) {
-      this.over = true; // Game over!
-    }
-
     this.actuate();
   }
 };
