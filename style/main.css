@@ -560,6 +560,11 @@ hr {
   display: block;
   clear: both; }
 
+.below-game {
+  display: block;
+  clear: both;
+  margin: 5px; }
+
 .game-intro {
   float: left;
   line-height: 42px;
@@ -574,6 +579,20 @@ hr {
   color: #f9f6f2;
   height: 40px;
   line-height: 42px;
+  cursor: pointer;
+  display: block;
+  text-align: center;
+  float: right; }
+
+.undo-button {
+  display: inline-block;
+  background: #8f7a66;
+  border-radius: 3px;
+  padding: 0 10px;
+  text-decoration: none;
+  color: #f9f6f2;
+  height: 30px;
+  line-height: 32px;
   cursor: pointer;
   display: block;
   text-align: center;
@@ -620,6 +639,13 @@ hr {
     line-height: 1.65; }
 
   .restart-button {
+    width: 42%;
+    padding: 0;
+    display: block;
+    box-sizing: border-box;
+    margin-top: 2px; }
+
+  .undo-button {
     width: 42%;
     padding: 0;
     display: block;

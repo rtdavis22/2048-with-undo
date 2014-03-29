@@ -9,6 +9,9 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
   this.inputManager.on("move", this.move.bind(this));
   this.inputManager.on("restart", this.restart.bind(this));
   this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
+  this.inputManager.on("undo", this.undoMove.bind(this));
+
+  this.stateHistory = [];
 
   this.setup();
 }
@@ -16,6 +19,7 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
 // Restart the game
 GameManager.prototype.restart = function () {
   this.storageManager.clearGameState();
+  this.stateHistory = [];
   this.actuator.continueGame(); // Clear the game won/lost message
   this.setup();
 };
@@ -88,8 +92,11 @@ GameManager.prototype.actuate = function () {
   // Clear the state when the game is over (game over only, not win)
   if (this.over) {
     this.storageManager.clearGameState();
+    this.stateHistory = [];
   } else {
-    this.storageManager.setGameState(this.serialize());
+    var state = this.serialize();
+    this.storageManager.setGameState(state);
+    this.stateHistory.push(state);
   }
 
   this.actuator.actuate(this.grid, {
@@ -269,6 +276,24 @@ GameManager.prototype.tileMatchesAvailable = function () {
   }
 
   return false;
+};
+
+GameManager.prototype.undoMove = function() {
+  if (this.stateHistory.length > 1) {
+    // Ignore the current state.
+    this.stateHistory.pop();
+
+    var previousState = this.stateHistory.pop();
+
+    this.grid        = new Grid(previousState.grid.size,
+                                previousState.grid.cells); // Reload grid
+    this.score       = previousState.score;
+    this.over        = previousState.over;
+    this.won         = previousState.won;
+    this.keepPlaying = previousState.keepPlaying;
+
+    this.actuate();
+  }
 };
 
 GameManager.prototype.positionsEqual = function (first, second) {
